@@ -1,0 +1,56 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <div class="nav">
+                <div class="left-bar">
+                    <a href="{% url "post_list" %}"><h1 class="lk-header">Главная</h1></a>
+                    
+                    {% if user.is_authenticated %}
+                    
+                    <ul class="nav-list">
+                        <a href="{% url "post_new" %}">
+                            <li class="nav-list-item" id="create-transfer">Создать пост</li>
+                        </a>
+                        <a href="{% url "profile" %}">
+                            <li class="nav-list-item" id="show-transfer">Личный кабинет</li>
+                        </a>
+                    </ul>
+
+                </div>
+                <a href="{% url "logout" %}">Выйти</a>
+
+                    {% else %}
+
+                    <ul class="nav-list">
+                        <a href="{% url "login" %}">
+                            <li class="nav-list-item" id="create-transfer">Создать пост</li>
+                        </a>
+                        <a href="">
+                            <li class="nav-list-item w" id="create-transfer">...</li>
+                        </a>
+                    </ul>
+
+                </div>
+                <a href="{% url "login" %}">Войти или зарегистрироваться</a>
+
+                    {% endif %}
+
+            </div>
+            <div class="main">
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

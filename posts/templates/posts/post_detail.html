@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="post">
+        {% if post.published_date %}
+            <div class="page-post-date">
+                {{ post.published_date }}
+                {% if post.author == request.user %}
+                    <form method="POST" action="{% url 'post_remove' pk=post.pk %}" class="post-form">{% csrf_token %}
+                        <button type="submit" class="save-btn" name="remove" style="margin-top:20px;">Удалить</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+        <form method="POST" action="{% url 'post_publish' pk=post.pk %}" class="post-form">{% csrf_token %}
+            <button type="submit" class="save-btn" name="publish" style="width:120px;">Опубликовать</button>
+        </form>
+        {% endif %}
+        <p class="page-post-title">{{ post.title }}</p>
+        <p class="page-post-author">Автор: {{ post.author }}</p>
+        <p class="page-post-text">{{ post.text|linebreaksbr }}</p>
+    </div>
+
+    {% if post.author == request.user %}
+        <a class="page-link" href="{% url 'post_edit' pk=post.pk %}"><span class="">Изменить</span></a>
+    {% endif %}
+
+    <p class="page-post-texte" style="margin-top:60px; margin-bottom:30px">
+        Добавить комментарий
+    </p>
+    <form method="POST" class="post-form" id="comment">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save-btn" style="margin-top:10px;">Сохранить</button>
+    </form>
+    
+    <div class="comment">
+        <p class="comment-title">
+            Комментарии
+        </p>
+        {% for comment in comments %}
+        <div class="comment-elem">
+            <div class="date">{{ comment.published_date }}</div>
+            <p class="comment-author">{{ comment.author }}<p>
+            <p class="comment-text">{{ comment.text|linebreaks }}</p>
+        </div>
+    </div>
+    {% empty %}
+        <p style="margin-top:50px;">Нет комментариев</p>
+    {% endfor %}
+
+{% endblock %}

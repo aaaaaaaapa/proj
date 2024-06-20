@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <p class="page-post-title">
+        Добро пожаловать, {{ request.user.username }}!
+    </p>
+    
+    <h2 class="section-title" style="margin-top: 50px;">
+        Список ваших постов
+    </h2>
+
+    <div class="type" style="margin-top: 35px; font-size:18px;">
+        {% if request.GET.q == 'draft' %}
+            <a href="?q=all" class="page-link">
+                <p class="post-title">Все посты</p>
+            </a>
+        {% else %}
+            <a href="?q=draft" class="page-link">
+                <p class="post-title">Только неопубликованные посты</p>
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="posts" style="margin-top: 0px">
+        <ul class="post-list">
+
+            {% for post in posts %}
+                <li class="post-list-item">
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="page-link">
+                        <p class="post-title">
+                        {{ post.title }}
+                    </p></a>
+                    <p class="post-date">
+                        {% if post.published_date %}
+                            {{ post.published_date }}
+                        {% else %}
+                            Не опубликовано
+                        {% endif %}
+                    </p>
+                </li> 
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if posts %}
+        <nav class="pagination">
+        <ul class="pagination-list">
+
+            <li class="page-item {% if not posts.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="{% if posts.has_previous %}?page={{posts.previous_page_number}}{% endif %}">Назад</a>
+            </li>
+
+            {% for page in posts.paginator.page_range %}
+            {% if page >= posts.number|add:-2 and page <= posts.number|add:2 %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{ page }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            <li class="page-item {% if not posts.has_next %}disabled{% endif %}">
+                <a class="page-link" href="{% if posts.has_next %}?page={{posts.next_page_number}}{% endif %}">Вперед</a>
+            </li>
+        </ul>
+        </nav>
+    {% endif %}
+
+{% endblock%}

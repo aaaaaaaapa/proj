@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="posts">
+        <h2 class="section-title">
+            Список постов
+        </h2>
+        <ul class="post-list">
+
+            {% for post in posts %}
+                <li class="post-list-item">
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="page-link">
+                        <p class="post-title">
+                        {{ post.title }}
+                    </p></a>
+                    <p class="post-date">
+                        {{ post.published_date }}
+                    </p>
+                </li> 
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if posts %}
+        <nav class="pagination">
+        <ul class="pagination-list">
+
+            <li class="page-item {% if not posts.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="{% if posts.has_previous %}?page={{posts.previous_page_number}}{% endif %}">Назад</a>
+            </li>
+
+            {% for page in posts.paginator.page_range %}
+            {% if page >= posts.number|add:-2 and page <= posts.number|add:2 %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{ page }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            <li class="page-item {% if not posts.has_next %}disabled{% endif %}">
+                <a class="page-link" href="{% if posts.has_next %}?page={{posts.next_page_number}}{% endif %}">Вперед</a>
+            </li>
+        </ul>
+        </nav>
+    {% endif %}
+
+{% endblock%}
