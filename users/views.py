@@ -14,11 +14,10 @@ def login(request):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            user = auth.authenticate(username=username, password=password)
-
+            user = auth.authenticate(username=username, 
+                                     password=password)
             if user:
                 auth.login(request, user)
-                messages.success(request, f'{username}, вы успешно вошли в аккаунт')
                 return redirect('profile')
     else:
         form = UserLoginForm()
@@ -32,16 +31,15 @@ def registration(request):
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
             form.save()
-
             user = form.instance
             auth.login(request, user)
 
-            messages.success(request, f'{user.username}, вы успешно зарегистрировались и вошли в аккаунт')
             return redirect('profile')
     else:
         form = UserRegistrationForm()
 
-    return render(request, 'users/registration.html', {'form': form})
+    return render(request, 'users/registration.html', 
+                  {'form': form})
 
 
 @login_required
@@ -65,6 +63,5 @@ def profile(request):
 @login_required
 def logout(request):
     auth.logout(request)
-    messages.success(request, f'Вы вышли из аккаунта')
     return redirect('login')
 

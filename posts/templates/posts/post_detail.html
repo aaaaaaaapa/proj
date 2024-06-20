@@ -27,13 +27,15 @@
         <a class="page-link" href="{% url 'post_edit' pk=post.pk %}"><span class="">Изменить</span></a>
     {% endif %}
 
-    <p class="page-post-texte" style="margin-top:60px; margin-bottom:30px">
-        Добавить комментарий
-    </p>
-    <form method="POST" class="post-form" id="comment">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save-btn" style="margin-top:10px;">Сохранить</button>
-    </form>
+    {% if request.user.is_authenticated %}
+        <p class="page-post-texte" style="margin-top:60px; margin-bottom:30px">
+            Добавить комментарий
+        </p>
+        <form method="POST" class="post-form" id="comment">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save-btn" style="margin-top:10px;">Сохранить</button>
+        </form>
+    {% endif %}
     
     <div class="comment">
         <p class="comment-title">
